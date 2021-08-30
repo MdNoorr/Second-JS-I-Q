@@ -1,0 +1,1839 @@
+=====================01======================
+
+
+Q. When to use reduce(), map(), foreach() and filter() in JavaScript?
+forEach()
+It takes a callback function and run that callback function on each element of array one by one.
+
+Basically forEach works as a traditional for loop looping over the array and providing array elements to do operations on them.
+
+var arr = [10, 20, 30];
+
+arr.forEach(function (elem, index){
+   console.log(elem + ' comes at ' + index);
+})
+Output
+
+10 comes at 0
+20 comes at 1
+30 comes at 2
+filter()
+The main difference between forEach() and filter() is that forEach just loop over the array and executes the callback but filter executes the callback and check its return value. If the value is true element remains in the resulting array but if the return value is false the element will be removed for the resulting array.
+
+Note: filter does not update the existing array it will return a new filtered array every time.
+
+var arr = [10, 20, 30]; 
+
+var result = arr.filter(function(elem){
+    return elem !== 20;
+})
+console.log(result)
+Output
+
+[10, 30]
+map()
+map() like filter() & forEach() takes a callback and run it against every element on the array but whats makes it unique is it generate a new array based on your existing array.
+
+Like filter(), map() also returns an array. The provided callback to map modifies the array elements and save them into the new array upon completion that array get returned as the mapped array.
+
+var arr = [10, 20, 30];
+
+var mapped = arr.map(function(elem) {
+    return elem * 10;
+});
+console.log(mapped)
+Output
+
+[100, 200, 300]
+reduce()
+reduce() method of the array object is used to reduce the array to one single value.
+
+var arr = [10, 20, 30];
+
+var sum = arr.reduce(function(sum, elem) {
+    return sum + elem;
+});
+console.log(sum); // Output: 60
+↥ back to top
+Q. What is Hoisting in JavaScript?
+Hoisting is a JavaScript mechanism where variables and function declarations are moved to the top of their scope before code execution.
+
+Example 01: Variable Hoisting
+
+console.log(message); // output : undefined
+var message = "The variable Has been hoisted";
+The above code looks like as below to the interpreter,
+
+var message;
+console.log(message);
+message = "The variable Has been hoisted";
+Example 02: Function Hoisting
+
+function hoist() {
+  a = 20;
+  var b = 100;
+}
+
+hoist();
+
+console.log(a);
+/* 
+Accessible as a global variable outside hoist() function
+Output: 20
+*/
+
+console.log(b);
+/*
+Since it was declared, it is confined to the hoist() function scope.
+We can't print it out outside the confines of the hoist() function.
+Output: ReferenceError: b is not defined
+*/
+All declarations (function, var, let, const and class) are hoisted in JavaScript, while the var declarations are initialized with undefined, but let and const declarations remain uninitialized.
+
+console.log(a);
+let a = 3;
+
+// Output: ReferenceError: a is not defined
+They will only get initialized when their lexical binding (assignment) is evaluated during runtime by the JavaScript engine. This means we can’t access the variable before the engine evaluates its value at the place it was declared in the source code. This is what we call Temporal Dead Zone, A time span between variable creation and its initialization where they can’t be accessed.
+
+Note: JavaScript only hoists declarations, not initialisation
+
+↥ back to top
+Q. What are closures?
+A closure is the combination of a function and the lexical environment within which that function was declared. i.e, It is an inner function that has access to the outer or enclosing function’s variables. The closure has three scope chains
+
+Own scope where variables defined between its curly brackets
+Outer function’s variables
+Global variables
+function Welcome(name) {
+  var greetingInfo = function(message) {
+    console.log(message+' '+name);
+  }
+  return greetingInfo;
+}
+var myFunction = Welcome('John');
+myFunction('Welcome '); // Output: Welcome John
+myFunction('Hello Mr.'); // output: Hello Mr.John
+As per the above code, the inner function greetingInfo() has access to the variables in the outer function Welcome() even after outer function has returned.
+
+↥ back to top
+Q. How do you clone an object in JavaScript?
+Using the object spread operator ..., the object own enumerable properties can be copied into the new object. This creates a shallow clone of the object.
+
+const obj = { a: 1, b: 2 }
+const shallowClone = { ...obj }
+With this technique, prototypes are ignored. In addition, nested objects are not cloned, but rather their references get copied, so nested objects still refer to the same objects as the original. Deep-cloning is much more complex in order to effectively clone any type of object (Date, RegExp, Function, Set, etc) that may be nested within the object.
+
+Other alternatives include:
+
+JSON.parse(JSON.stringify(obj)) can be used to deep-clone a simple object, but it is CPU-intensive and only accepts valid JSON (therefore it strips functions and does not allow circular references).
+Object.assign({}, obj) is another alternative.
+Object.keys(obj).reduce((acc, key) => (acc[key] = obj[key], acc), {}) is another more verbose alternative that shows the concept in greater depth.
+↥ back to top
+Q. What are the possible ways to create objects in JavaScript?
+a.) Object constructor: The simpliest way to create an empty object is using Object constructor. Currently this approach is not recommended.
+
+ var object = new Object();
+b.) Object create method: The create method of Object creates a new object by passing the prototype object as a parameter
+
+ var object = Object.create(null);
+c.) Object literal syntax: The object literal syntax is equivalent to create method when it passes null as parameter
+
+ var object = {};
+d.) Function constructor: Create any function and apply the new operator to create object instances,
+
+ function Person(name) {
+  var object = {};
+  object.name = name;
+  object.age = 26;
+  return object;
+ }
+ var object = new Person("Alex");
+e.) Function constructor with prototype: This is similar to function constructor but it uses prototype for their properties and methods,
+
+function Person(){}
+Person.prototype.name = "Alex";
+var object = new Person();
+This is equivalent to an instance created with an object create method with a function prototype and then call that function with an instance and parameters as arguments.
+
+function func {};
+
+new func(x, y, z);
+
+// **(OR)**
+
+// Create a new instance using function prototype.
+var newInstance = Object.create(func.prototype)
+
+// Call the function
+var result = func.call(newInstance, x, y, z),
+
+// If the result is a non-null object then use it otherwise just use the new instance.
+console.log(result && typeof result === 'object' ? result : newInstance);
+f.) ES6 Class syntax: ES6 introduces class feature to create the objects
+
+class Person {
+ constructor(name) {
+    this.name = name;
+ }
+}
+
+var object = new Person("Alex");
+g.) Singleton pattern: A Singleton is an object which can only be instantiated one time. Repeated calls to its constructor return the same instance and this way one can ensure that they don't accidentally create multiple instances.
+
+var object = new function() {
+  this.name = "Alex";
+}
+↥ back to top
+Q. What are the javascript data types?
+There are eight basic data types in JavaScript.
+
+Data Types	Description	Example
+String	Represents textual data	let str = 'Hi', let str2 = "Hello", let str3 = `Hello World`
+Number	An integer or a floating-point number	let num = 3, let num2 = 3.234, let num3 = 3e-2
+BigInt	An integer with arbitrary precision	let num = 900719925124740999n, let num = 1n
+Boolean	Any of two values: true or false	let flag = true
+undefined	A data type whose variable is not initialized	let a;
+null	Denotes a null value	let a = null;
+Symbol	Data type whose instances are unique and immutable	let value = Symbol('hello');
+Object	key-value pairs of collection of data	let student = { };
+String
+
+String is used to store text. In JavaScript, strings are surrounded by quotes:
+
+Single quotes: 'Hello'
+Double quotes: "Hello"
+Backticks: `Hello`
+Example:
+
+//Strings 
+const firstName = 'John';
+const lastName = "K";
+const result = `The names are ${firstName} and ${lastName}`;
+Number
+
+Number represents integer and floating numbers (decimals and exponentials). A number type can also be +Infinity, -Infinity, and NaN (not a number).
+
+const number1 = 3;
+const number2 = 3.433;
+const number3 = 3e5 // 3 * 10^5
+
+const number1 = 3/0;
+console.log(number1); // Infinity
+
+const number2 = -3/0;
+console.log(number2); // -Infinity
+
+// strings can't be divided by numbers
+const number3 = "abc"/3; 
+console.log(number3);  // NaN
+BigInt
+
+In JavaScript, Number type can only represent numbers less than (253 - 1) and more than -(253 - 1). However, if you need to use a larger number than that, you can use the BigInt data type.
+
+A BigInt number is created by appending n to the end of an integer.
+
+// BigInt value
+const num1 = 900719925124740998n;
+const num2 = 900719925124740998n;
+const num3 = 10;
+
+
+// Adding two big integers
+const result1 = num1 + num2;
+console.log(result1); // "1801439850249481996n"
+
+
+// Error! BitInt and number cannot be added
+const result2 = num1 + num2 + num3; 
+console.log(result2);  // Uncaught TypeError: Cannot mix BigInt and other types
+Boolean
+
+This data type represents logical entities. Boolean represents one of two values: true or false.
+
+const dataChecked = true;
+const valueCounted = false;
+undefined
+
+The undefined data type represents value that is not assigned. If a variable is declared but the value is not assigned, then the value of that variable will be undefined.
+
+let name;
+console.log(name); // undefined
+
+let name = undefined;
+console.log(name); // undefined
+null
+
+In JavaScript, null is a special value that represents empty or unknown value.
+
+const number = null;
+Symbol
+
+A value having the data type Symbol can be referred to as a symbol value. Symbol is an immutable primitive value that is unique.
+
+// Two symbols with the same description
+
+const value1 = Symbol('hello');
+const value2 = Symbol('hello');
+
+let result = (value1 === value2) ? true : false;  // false;
+
+// Note: Though value1 and value2 both contain 'hello', they are different as they are of the Symbol type.
+Object
+
+An object is a complex data type that allows us to store collections of data.
+
+const employee = {
+    firstName: 'John',
+    lastName: 'K',
+    email: 'john.k@gmail.com'
+};
+↥ back to top
+Q. What are global variables?
+Global variables are those that are available throughout the length of the code without any scope. The var keyword is used to declare a local variable but if you omit it then it will become global variable
+
+msg = "Hello" // var is missing, it becomes global variable
+The problem with global variables is the conflict of variable names of local and global scope. It is also difficult to debug and test the code that relies on global variables.
+
+↥ back to top
+Q. What is variable shadowing in javascript?
+Variable shadowing occurs when a variable declared within a certain scope (decision block, method, or inner class) has the same name as a variable declared in an outer scope. This outer variable is said to be shadowed.
+
+If there is a variable in the global scope, and you'd like to create a variable with the same name in a function. The variable in the inner scope will temporarily shadow the variable in the outer scope.
+
+var val = 10;
+
+function Hoist(val) {
+    alert(val);
+}
+
+Hoist(20);
+Output
+
+20
+↥ back to top
+Q. What is an event flow?
+Event flow is the order in which event is received on the web page. When you click an element that is nested in various other elements, before your click actually reaches its destination, or target element, it must trigger the click event each of its parent elements first, starting at the top with the global window object.
+
+There are two ways of event flow
+
+Top to Bottom(Event Capturing)
+Bottom to Top (Event Bubbling)
+↥ back to top
+Q. What is event bubbling?
+Event bubbling is a type of event propagation where the event first triggers on the innermost target element, and then successively triggers on the ancestors (parents) of the target element in the same nesting hierarchy till it reaches the outermost DOM element.
+
+Example: If you click on EM, the handler on DIV runs.
+
+<div onclick="alert('The handler!')">
+  <em>If you click on <code>EM</code>, the handler on <code>DIV</code> runs.</em>
+</div>
+Stopping bubbling
+<body onclick="alert(`the bubbling doesn\'t reach here`)">
+  <button onclick="event.stopPropagation()">Click me</button>
+</body>
+↥ back to top
+Q. What is event capturing?
+Event capturing is a type of event propagation where the event is first captured by the outermost element and then successively triggers on the descendants (children) of the target element in the same nesting hierarchy till it reaches the inner DOM element.
+
+↥ back to top
+Q. What is prototype chain?
+Nearly all objects in JavaScript are instances of Object. That means all the objects in JavaScript inherit the properties and methods from Object.prototype. This is called Prototype chaining.
+
+Prototype chaining is used to build new types of objects based on existing ones. It is similar to inheritance in a class based language. The prototype on object instance is available through Object.getPrototypeOf(object) or __proto__ property whereas prototype on constructors function is available through Object.prototype.
+
+function Person(firstName, lastName, age) {
+  this.firstName = firstName;
+  this.lastName = lastName;
+  this.age = age;
+}
+//Person class created
+Person.prototype.getFullName = function() {
+  return this.firstName + " " + this.lastName;
+}
+
+// we have added getFullName method in Person’s prototype.
+var person = new Person("John", "K", 25);
+// It will create an instance of the Person class
+> person.hasOwnProperty("firstName");  // true
+> person.hasOwnProperty("getFullName");  // false
+> person.getFullName(); // John K
+↥ back to top
+Q. What is the difference between Call, Apply and Bind?
+a.) call()
+
+The call() method invokes a function with a given this value and arguments provided one by one
+
+var employee1 = {firstName: 'John', lastName: 'Rodson'};
+var employee2 = {firstName: 'Jimmy', lastName: 'Baily'};
+
+function invite(greeting1, greeting2) {
+    console.log(greeting1 + ' ' + this.firstName + ' ' + this.lastName+ ', '+ greeting2);
+}
+
+invite.call(employee1, 'Hello', 'How are you?'); // Hello John Rodson, How are you?
+invite.call(employee2, 'Hello', 'How are you?'); // Hello Jimmy Baily, How are you?
+b.) apply()
+
+Invokes the function and allows you to pass in arguments as an array
+
+var employee1 = {firstName: 'John', lastName: 'Rodson'};
+var employee2 = {firstName: 'Jimmy', lastName: 'Baily'};
+
+function invite(greeting1, greeting2) {
+    console.log(greeting1 + ' ' + this.firstName + ' ' + this.lastName+ ', '+ greeting2);
+}
+
+invite.apply(employee1, ['Hello', 'How are you?']); // Hello John Rodson, How are you?
+invite.apply(employee2, ['Hello', 'How are you?']); // Hello Jimmy Baily, How are you?
+c.) bind()
+
+returns a new function, allowing you to pass in an array and any number of arguments
+
+var employee1 = {firstName: 'John', lastName: 'Rodson'};
+var employee2 = {firstName: 'Jimmy', lastName: 'Baily'};
+
+function invite(greeting1, greeting2) {
+    console.log(greeting1 + ' ' + this.firstName + ' ' + this.lastName+ ', '+ greeting2);
+}
+
+var inviteEmployee1 = invite.bind(employee1);
+var inviteEmployee2 = invite.bind(employee2);
+inviteEmployee1('Hello', 'How are you?'); // Hello John Rodson, How are you?
+inviteEmployee2('Hello', 'How are you?'); // Hello Jimmy Baily, How are you?
+↥ back to top
+Q. What is the difference between == and === operators?
+JavaScript provides both strict(===, !==) and type-converting(==, !=) equality comparison. The strict operators takes type of variable in consideration, while non-strict operators make type correction/conversion based upon values of variables. The strict operators follow the below conditions for different types,
+
+Two strings are strictly equal when they have the same sequence of characters, same length, and same characters in corresponding positions.
+Two numbers are strictly equal when they are numerically equal. i.e, Having the same number value. There are two special cases in this,
+NaN is not equal to anything, including NaN.
+Positive and negative zeros are equal to one another.
+Two Boolean operands are strictly equal if both are true or both are false.
+Two objects are strictly equal if they refer to the same Object.
+Null and Undefined types are not equal with ===, but equal with ==. i.e, null===undefined --> false but null==undefined --> true
+Examples
+
+0 == false   // true
+0 === false  // false
+1 == "1"     // true
+1 === "1"    // false
+null == undefined // true
+null === undefined // false
+'0' == false // true
+'0' === false // false
+[]==[] or []===[] //false, refer different objects in memory
+{}=={} or {}==={} //false, refer different objects in memory
+↥ back to top
+Q. What is a first class function?
+JavaScript functions are first-class functions meaning functions and objects are treated as the same thing. Functions can be stored as a variable inside an object or an array as well as it can be passed as an argument or be returned by another function. That makes function "first-class citizens in JavaScript"
+
+Example: Assign a function to a variable
+
+const message = function() {
+   console.log("Hello World!");
+}
+
+message(); // Invoke it using the variable
+Example: Pass a function as an Argument
+
+function sayHello() {
+   return "Hello, ";
+}
+function greeting(helloMessage, name) {
+  console.log(helloMessage() + name);
+}
+// Pass `sayHello` as an argument to `greeting` function
+greeting(sayHello, "JavaScript!");
+Example: Return a function
+
+function sayHello() {
+   return function() {
+      console.log("Hello!");
+   }
+}
+Example: Using a variable
+
+const sayHello = function() {
+   return function() {
+      console.log("Hello!");
+   }
+}
+const myFunc = sayHello();
+myFunc();
+Example: Using double parentheses
+
+function sayHello() {
+   return function() {
+      console.log("Hello!");
+   }
+}
+sayHello()();
+We are using double parentheses ()() to invoke the returned function as well.
+
+↥ back to top
+Q. What is a higher order function?
+A Higher-Order function is a function that receives a function as an argument or returns the function as output.
+
+For example, Array.prototype.map(), Array.prototype.filter() and Array.prototype.reduce() are some of the Higher-Order functions in javascript.
+
+const arr1 = [1, 2, 3];
+const arr2 = arr1.map(function(item) {
+  return item * 2;
+});
+console.log(arr2);
+↥ back to top
+Q. What is a unary function?
+Unary function (i.e. monadic) is a function that accepts exactly one argument. Let us take an example of unary function. It stands for single argument accepted by a function.
+
+const unaryFunction = a => console.log (a + 10); //Add 10 to the given argument and display the value
+↥ back to top
+Q. What is currying function?
+Currying is the process of taking a function with multiple arguments and turning it into a sequence of functions each with only a single argument.
+
+function volume(length) {
+  return function(width) {
+    return function(height) {
+      return height * width * length;
+    }
+  }
+}
+
+volume(2)(3)(4); // 24
+Curried functions are great to improve code re-usability and functional composition.
+
+↥ back to top
+Q. What is a pure function?
+Pure functions are functions that accept an input and returns a value without modifying any data outside its scope(Side Effects). Its output or return value must depend on the input/arguments and pure functions must return a value.
+
+Example
+
+function impure(arg) {
+    finalR.s = 90
+    return arg * finalR.s
+}
+The above function is not a pure function because it modified a state finalR.s outside its scope.
+
+function pure(arg) {
+    return arg * 4
+}
+Here is a pure function. It didn’t side effect any external state and it returns an output based on the input.
+
+A function must pass two tests to be considered “pure”:
+
+Same inputs always return same outputs
+No side-effects
+1. Same Input => Same Output
+Compare this:
+
+const add = (x, y) => x + y;
+
+add(2, 4); // 6
+To this
+
+let x = 2;
+
+const add = (y) => {
+  x += y;
+};
+
+add(4); // x === 6 (the first time)
+2. Pure Functions = Consistent Results
+The first example returns a value based on the given parameters, regardless of where/when you call it.
+
+If you pass 2 and 4, you’ll always get 6.
+
+Nothing else affects the output.
+
+Benefits
+
+One of the major benefits of using pure functions is they are immediately testable. They will always produce the same result if you pass in the same arguments.
+The pure functions are easier to parallelize
+They also makes maintaining and refactoring code much easier.
+↥ back to top
+Q. What is memoization in JavaScript?
+Memoization is a programming technique which attempts to increase a function’s performance by caching its previously computed results. Each time a memoized function is called, its parameters are used to index the cache. If the data is present, then it can be returned, without executing the entire function. Otherwise the function is executed and then the result is added to the cache.
+
+// A simple memoized function to Add Number
+const memoizedAdd = () => {
+  let cache = {};
+  return (number) => {
+    if (number in cache) {
+      console.log('Fetching from cache: ');
+      return cache[number];
+    }
+    else {
+      console.log('Calculating result: ');
+      let result = number + 10;
+      cache[number] = result;
+      return result;
+    }
+  }
+}
+// returned function from memoizedAdd
+const sum = memoizedAdd();
+console.log(sum(10)); // Calculating result: 20
+console.log(sum(10)); // Fetching from cache: 20
+
+
+
+
+========================02===================
+Q. What is a promise?
+A promise is an object that may produce a single value some time in the future with either a resolved value or a reason that it’s not resolved(for example, network error). It will be in one of the 3 possible states: fulfilled, rejected, or pending. Syntax
+
+const promise = new Promise(function(resolve, reject) {
+  // promise description
+})
+Promises are used to handle asynchronous operations. They provide an alternative approach for callbacks by reducing the callback hell and writing the cleaner code.
+
+Promises have three states:
+
+Pending: This is an initial state of the Promise before an operation begins
+Fulfilled: This state indicates that specified operation was completed.
+Rejected: This state indicates that the operation did not complete. In this case an error value will be thrown.
+↥ back to top
+Q. What is a callback function?
+A callback function is a function passed into another function as an argument. This function is invoked inside the outer function to complete an action.
+
+function callbackFunction(name) {
+  console.log('Hello ' + name);
+}
+
+function outerFunction(callback) {
+  let name = prompt('Please enter your name.');
+  callback(name);
+}
+
+outerFunction(callbackFunction);
+↥ back to top
+Q. Why do we need callbacks?
+The callbacks are needed because javascript is a event driven language. That means instead of waiting for a response javascript will keep executing while listening for other events.
+
+Let us take an example with first function invoking an API call(simulated by setTimeout) and next function which logs the message.
+
+function firstFunction() {
+  // Simulate a code delay
+  setTimeout( function() {
+    console.log('First function called');
+  }, 1000 );
+}
+function secondFunction() {
+  console.log('Second function called');
+}
+firstFunction();
+secondFunction();
+
+Output
+// Second function called
+// First function called
+As observed from the output, javascript didnot wait for the response of first function and remaining code block get executed. So callbacks used in a way to make sure that certain code does not execute until other code finished execution.
+
+↥ back to top
+Q. What is a callback hell?
+Callback Hell is an anti-pattern with multiple nested callbacks which makes code hard to read and debug when dealing with asynchronous logic. The callback hell looks like below,
+
+async1(function() {
+    async2(function() {
+        async3(function() {
+            async4(function() {
+                ....
+            });
+        });
+    });
+});
+
+
+
+
+=====================03======================
+Q. What is callback in callback?
+You can nest one callback inside in another callback to execute the actions sequentially one by one. This is known as callbacks in callbacks.
+
+loadScript('/script1.js', function(script) {
+    console.log('first script is loaded');
+
+  loadScript('/script2.js', function(script) {
+
+    console.log('second script is loaded');
+
+    loadScript('/script3.js', function(script) {
+
+        console.log('third script is loaded');
+      // after all scripts are loaded
+    });
+  })
+});
+↥ back to top
+Q. What is promise chaining?
+The process of executing a sequence of asynchronous tasks one after another using promises is known as Promise chaining.
+
+new Promise(function(resolve, reject) {
+
+  setTimeout(() => resolve(1), 1000);
+
+}).then(function(result) {
+
+  console.log(result); // 1
+  return result * 2;
+
+}).then(function(result) {
+
+  console.log(result); // 2
+  return result * 3;
+
+}).then(function(result) {
+
+  console.log(result); // 6
+  return result * 4;
+
+});
+In the above handlers, the result is passed to the chain of .then() handlers with the below work flow,
+
+The initial promise resolves in 1 second,
+After that .then handler is called by logging the result(1) and then return a promise with the value of result * 2.
+After that the value passed to the next .then handler by logging the result(2) and return a promise with result * 3.
+Finally the value passed to the last .then handler by logging the result(6) and return a promise with result * 4.
+↥ back to top
+Q. What is promise.all()?
+Promise.all is a promise that takes an array of promises as an input (an iterable), and it gets resolved when all the promises get resolved or any one of them gets rejected.
+
+Promise.all([Promise1, Promise2, Promise3]) 
+        .then(result) => {   
+            console.log(result) 
+          }) 
+        .catch(error => console.log(`Error in promises ${error}`));
+Note: Remember that the order of the promises(output the result) is maintained as per input order.
+
+↥ back to top
+Q. What is the purpose of race method in promise?
+Promise.race() method will return the promise instance which is firstly resolved or rejected. Let us take an example of race() method where promise2 is resolved first
+
+var promise1 = new Promise(function(resolve, reject) {
+    setTimeout(resolve, 500, 'one');
+});
+var promise2 = new Promise(function(resolve, reject) {
+    setTimeout(resolve, 100, 'two');
+});
+
+Promise.race([promise1, promise2]).then(function(value) {
+  console.log(value); // "two" // Both promises will resolve, but promise2 is faster
+});
+↥ back to top
+Q. What is a strict mode in javascript?
+Strict Mode is a new feature in ECMAScript 5 that allows to place a program, or a function, in a strict operating context. This way it prevents certain actions from being taken and throws more exceptions. The literal expression 'use strict'; instructs the browser to use the javascript code in the Strict mode.
+
+Strict mode is useful to write secure javaScript by notifying "bad syntax" into real errors. For example, it eliminates accidentally creating a global variable by throwing an error and also throws an error for assignment to a non-writable property, a getter-only property, a non-existing property, a non-existing variable, or a non-existing object.
+
+The strict mode is declared by adding "use strict"; to the beginning of a script or a function. If declare at the beginning of a script, it has global scope.
+
+'use strict';
+x = 3.14; // This will cause an error because x is not declared
+and if you declare inside a function, it has local scope
+
+x = 3.14;       // This will not cause an error.
+myFunction();
+
+function myFunction() {
+  'use strict';
+  y = 3.14;   // This will cause an error
+}
+
+
+Q. What is same-origin policy?
+The same-origin policy is a policy that prevents JavaScript from making requests across domain boundaries. An origin is defined as a combination of URI scheme, hostname, and port number. If you enable this policy then it prevents a malicious script on one page from obtaining access to sensitive data on another web page using Document Object Model(DOM).
+
+
+
+Q. Is JavaScript a compiled or interpreted language?
+JavaScript is an interpreted language, not a compiled language. An interpreter in the browser reads over the JavaScript code, interprets each line, and runs it. Nowadays modern browsers use a technology known as Just-In-Time (JIT) compilation, which compiles JavaScript to executable bytecode just as it is about to run.
+
+
+=====================04======================
+Q. What is typeof operator?
+In JavaScript, the typeof operator returns the data type of its operand in the form of a string. The operand can be any object, function, or variable.
+
+Example: - 01
+
+typeof undeclaredVariable; // "undefined"
+
+var a;
+typeof a; // "undefined"
+
+a = "Hello World";
+typeof a; // "string"
+
+a = 42;
+typeof a; // "number"
+
+a = 3.1415
+typeof a; // "number"
+
+a = true;
+typeof a; // "boolean"
+
+a = null;
+typeof a; // "object"
+
+a = undefined;
+typeof a; // "undefined"
+
+a = { b: "c" };
+typeof a; // "object"
+Example: - 02
+
+// Numbers
+typeof 37 === 'number';
+typeof 3.14 === 'number';
+typeof(42) === 'number';
+typeof Math.LN2 === 'number';
+typeof Infinity === 'number';
+typeof NaN === 'number';       
+typeof Number('1') === 'number';  // Number tries to parse things into numbers
+typeof Number('Hi') === 'number'; // including values that cannot be type coerced to a number
+
+typeof 42n === 'bigint';
+
+// Strings
+typeof '' === 'string';
+typeof 'Hello' === 'string';
+typeof `template literal` === 'string';
+typeof '1' === 'string';  // note that a number within a string is still typeof string
+typeof (typeof 1) === 'string';  // typeof always returns a string
+typeof String(1) === 'string';  // String converts anything into a string, safer than toString
+
+// Booleans
+typeof true === 'boolean';
+typeof false === 'boolean';
+typeof Boolean(1) === 'boolean'; // Boolean() will convert values based on if they're truthy or falsy
+typeof !!(1) === 'boolean'; // two calls of the ! (logical NOT) operator are equivalent to Boolean()
+
+// Symbols
+typeof Symbol() === 'symbol'
+typeof Symbol('foo') === 'symbol'
+typeof Symbol.iterator === 'symbol'
+
+// Undefined
+typeof undefined === 'undefined';
+typeof declaredButUndefinedVariable === 'undefined';
+typeof undeclaredVariable === 'undefined';
+
+// Objects
+typeof {a: 1} === 'object';
+
+// use Array.isArray or Object.prototype.toString.call
+// to differentiate regular objects from arrays
+typeof [1, 2, 4] === 'object';
+
+typeof new Date() === 'object';
+typeof /regex/ === 'object'; 
+
+// The following are confusing. 
+typeof new Boolean(true) === 'object';
+typeof new Number(1) === 'object';
+typeof new String('abc') === 'object';
+
+// Functions
+typeof function() {} === 'function';
+typeof class C {} === 'function';
+typeof Math.sin === 'function';
+
+
+Q. What is typeof operator?
+In JavaScript, the typeof operator returns the data type of its operand in the form of a string. The operand can be any object, function, or variable.
+
+Example: - 01
+
+typeof undeclaredVariable; // "undefined"
+
+var a;
+typeof a; // "undefined"
+
+a = "Hello World";
+typeof a; // "string"
+
+a = 42;
+typeof a; // "number"
+
+a = 3.1415
+typeof a; // "number"
+
+a = true;
+typeof a; // "boolean"
+
+a = null;
+typeof a; // "object"
+
+a = undefined;
+typeof a; // "undefined"
+
+a = { b: "c" };
+typeof a; // "object"
+Example: - 02
+
+// Numbers
+typeof 37 === 'number';
+typeof 3.14 === 'number';
+typeof(42) === 'number';
+typeof Math.LN2 === 'number';
+typeof Infinity === 'number';
+typeof NaN === 'number';       
+typeof Number('1') === 'number';  // Number tries to parse things into numbers
+typeof Number('Hi') === 'number'; // including values that cannot be type coerced to a number
+
+typeof 42n === 'bigint';
+
+// Strings
+typeof '' === 'string';
+typeof 'Hello' === 'string';
+typeof `template literal` === 'string';
+typeof '1' === 'string';  // note that a number within a string is still typeof string
+typeof (typeof 1) === 'string';  // typeof always returns a string
+typeof String(1) === 'string';  // String converts anything into a string, safer than toString
+
+// Booleans
+typeof true === 'boolean';
+typeof false === 'boolean';
+typeof Boolean(1) === 'boolean'; // Boolean() will convert values based on if they're truthy or falsy
+typeof !!(1) === 'boolean'; // two calls of the ! (logical NOT) operator are equivalent to Boolean()
+
+// Symbols
+typeof Symbol() === 'symbol'
+typeof Symbol('foo') === 'symbol'
+typeof Symbol.iterator === 'symbol'
+
+// Undefined
+typeof undefined === 'undefined';
+typeof declaredButUndefinedVariable === 'undefined';
+typeof undeclaredVariable === 'undefined';
+
+// Objects
+typeof {a: 1} === 'object';
+
+// use Array.isArray or Object.prototype.toString.call
+// to differentiate regular objects from arrays
+typeof [1, 2, 4] === 'object';
+
+typeof new Date() === 'object';
+typeof /regex/ === 'object'; 
+
+// The following are confusing. 
+typeof new Boolean(true) === 'object';
+typeof new Number(1) === 'object';
+typeof new String('abc') === 'object';
+
+// Functions
+typeof function() {} === 'function';
+typeof class C {} === 'function';
+typeof Math.sin === 'function';
+
+
+Q. What is eval?
+The eval() function evaluates JavaScript code represented as a string. The string can be a JavaScript expression, variable, statement, or sequence of statements.
+
+console.log(eval('10 + 20')); // 30
+
+
+var x = 10;
+var y = 20;
+var z = '50';
+eval('x + y + 1'); // returns 31
+eval(z);           // returns 50
+If the argument of eval() is not a string, eval() returns the argument unchanged. In the following example, the String constructor is specified and eval() returns a String object rather than evaluating the string.
+
+eval(new String('10 + 20')); // returns a String object containing "10 + 20"
+eval('10 + 20');             // returns 30
+
+
+// work around
+var expression = new String('10 + 20');
+eval(expression.toString()); // returns 30
+Note: The eval() function is not recommended to use because of the security reasons. It is not suggested to use because it is slower and makes code unreadable.
+
+
+Q. What is the difference between window and document?
+The window is the first thing that gets loaded into the browser. This window object has the majority of the properties like length, innerWidth, innerHeight, name, if it has been closed, its parents, and more.
+
+The document object is html, aspx, php, or other document that will be loaded into the browser. The document actually gets loaded inside the window object and has properties available to it like title, URL, cookie, etc.
+
+Window	Document
+It is the root level element in any web page	It is the direct child of the window object. This is also known as Document Object Model(DOM)
+By default window object is available implicitly in the page	You can access it via window.document or document.
+It has methods like alert(), confirm() and properties like document, location	It provides methods like getElementById(), getElementByTagName(), createElement() etc
+
+
+
+Q. What are the differences between undeclared and undefined variables?
+Below are the major differences between undeclared and undefined variables,
+
+undeclared	undefined
+These variables do not exist in a program and are not declared	These variables declared in the program but have not assigned any value
+If you try to read the value of an undeclared variable, then a runtime error is encountered	If you try to read the value of an undefined variable, an undefined value is returned.
+
+
+
+
+=====================05======================
+Q. What is the use of setTimeout?
+The setTimeout() method is used to call a function or evaluates an expression after a specified number of milliseconds. For example, let us log a message after 2 seconds using setTimeout method,
+
+setTimeout(function() { console.log("Good morning"); }, 2000);
+↥ back to top
+Q. What is the use of setInterval?
+The setInterval() method is used to call a function or evaluates an expression at specified intervals (in milliseconds). For example, let us log a message after 2 seconds using setInterval method,
+
+setInterval(function() { console.log("Good morning"); }, 2000);
+↥ back to top
+Q. How setTimeout() and setInterval() are different from each other?
+//Syntax for setTimeout
+
+function displayMessage() {
+    console.log('This message will be displayed only once after 4s!') ;
+}
+
+setTimeout(displayMessage, 4000);
+ 
+//Syntax for setInterval
+
+function displayMessage(){
+    console.log('This message will be displayed after every 4s!') ;
+}
+
+setInterval(displayMessage, 4000) ;
+Usage : setTimeout( function/expression, timeout, param1, param2, ... ) ;
+
+where expression/function is the JavaScript code to run after the timeout milliseconds have elapsed. The params are optional.
+
+Usage : setInterval ( function/expression, interval, param1, param2, ... );
+
+where expression/function is the JavaScript code to run repeatedly at specified interval of time has elpased .
+
+Main Difference
+
+When you need to invoke a function/expression once after a specified duration use setTimeout() function. But, if you need to invoke a function/expression repeatedly at a specified interval of time, then you should use setInterval() function.
+
+↥ back to top
+Q. Why is JavaScript treated as Single threaded?
+JavaScript is a single-threaded language. Because the language specification does not allow the programmer to write code so that the interpreter can run parts of it in parallel in multiple threads or processes. Whereas languages like java, go, C++ can make multi-threaded and multi-process programs.
+
+↥ back to top
+Q. What is an event delegation?
+Event delegation is a technique for listening to events where you delegate a parent element as the listener for all of the events that happen inside it. For example, if you wanted to detect field changes in inside a specific form, you can use event delegation technique,
+
+var form = document.querySelector('#registration-form');
+
+// Listen for changes to fields inside the form
+form.addEventListener('input', function (event) {
+
+// Log the field that was changed
+console.log(event.target);
+
+}, false);
+↥ back to top
+Q. What is the purpose JSON stringify?
+When sending data to a web server, the data has to be in a string format. You can achieve this by converting JSON object into a string using stringify() method.
+
+var userJSON = {'name': 'John', age: 31}
+var userString = JSON.stringify(user);
+console.log(userString); //"{"name":"John","age":31}"
+↥ back to top
+Q. How do you parse JSON string?
+When receiving the data from a web server, the data is always in a string format. But you can convert this string value to javascript object using parse() method.
+
+var userString = '{"name":"John","age":31}';
+var userJSON = JSON.parse(userString);
+console.log(userJSON);// {name: "John", age: 31}
+↥ back to top
+Q. What is the purpose of clearTimeout method?
+The clearTimeout() function is used in javascript to clear the timeout which has been set by setTimeout() function before that. i.e, The return value of setTimeout() function is stored in a variable and it’s passed into the clearTimeout() function to clear the timer. For example, the below setTimeout method is used to display the message after 3 seconds. This timeout can be cleared by clearTimeout() method.
+
+var msg;
+function greeting() {
+  alert('Good morning');
+}
+function start() {
+  msg =setTimeout(greeting, 3000);
+}
+function stop() {
+    clearTimeout(msg);
+}
+↥ back to top
+Q. What is the purpose of clearInterval method?
+The clearInterval() function is used in javascript to clear the interval which has been set by setInterval() function. i.e, The return value returned by setInterval() function is stored in a variable and it’s passed into the clearInterval() function to clear the interval. For example, the below setInterval method is used to display the message for every 3 seconds. This interval can be cleared by clearInterval() method.
+
+var msg;
+function greeting() {
+  alert('Good morning');
+}
+function start() {
+  msg = setInterval(greeting, 3000);
+}
+function stop() {
+    clearInterval(msg);
+}
+
+Q. What is an anonymous function?
+An anonymous function is a function without a name! Anonymous functions are commonly assigned to a variable name or used as a callback function. The syntax would be as below,
+
+function (optionalParameters) {
+  //do something
+}
+
+const myFunction = function(){ //Anonymous function assigned to a variable
+  //do something
+};
+
+[1, 2, 3].map(function(element){ //Anonymous function used as a callback function
+  //do something
+});
+Example:
+
+var x = function (a, b) {return a * b};
+var z = x(5, 10);
+console.log(z); // 50
+
+
+=====================06=====================
+Q. What are the function parameter rules?
+JavaScript functions follow below rules for parameters,
+
+The function definitions do not specify data types for parameters.
+Do not perform type checking on the passed arguments.
+Do not check the number of arguments received. i.e, The below function follows the above rules,
+function functionName(parameter1, parameter2, parameter3) {
+  console.log(parameter1); // 1
+}
+functionName(1);
+↥ back to top
+Q. What is an error object?
+An error object is a built in error object that provides error information when an error occurs. It has two properties: name and message. For example, the below function logs error details,
+
+try {
+  greeting("Welcome");
+}
+catch(err) {
+  console.log(err.name + "<br>" + err.message);
+}
+↥ back to top
+Q. When you get a syntax error?
+A SyntaxError is thrown if you try to evaluate code with a syntax error. For example, the below missing quote for the function parameter throws a syntax error
+
+try {
+  eval("greeting('welcome)");   // Missing ' will produce an error
+}
+catch(err) {
+  console.log(err.name);
+}
+↥ back to top
+Q. What are the different error names from error object?
+There are 6 different types of error names returned from error object
+
+Error Name	Description
+EvalError	An error has occurred in the eval() function
+RangeError	An error has occurred with a number "out of range"
+ReferenceError	An error due to an illegal reference
+SyntaxError	An error due to a syntax error
+TypeError	An error due to a type error
+URIError	An error due to encodeURI()
+↥ back to top
+Q. What are the various statements in error handling?
+Below are the list of statements used in an error handling,
+
+try: This statement is used to test a block of code for errors
+catch: This statement is used to handle the error
+throw: This statement is used to create custom errors.
+finally: This statement is used to execute code after try and catch regardless of the result.
+
+
+=====================07=====================
+Q. Difference between: function Person(){}, var person = Person(), and var person = new Person()?
+This question is pretty vague. My best guess at its intention is that it is asking about constructors in JavaScript. Technically speaking, function Person(){} is just a normal function declaration. The convention is to use PascalCase for functions that are intended to be used as constructors.
+
+var person = Person() invokes the Person as a function, and not as a constructor. Invoking as such is a common mistake if the function is intended to be used as a constructor. Typically, the constructor does not return anything, hence invoking the constructor like a normal function will return undefined and that gets assigned to the variable intended as the instance.
+
+var person = new Person() creates an instance of the Person object using the new operator, which inherits from Person.prototype. An alternative would be to use Object.create, such as: Object.create(Person.prototype).
+
+function Person(name) {
+  this.name = name;
+}
+
+var person = Person('John');
+console.log(person); // undefined
+console.log(person.name); // Uncaught TypeError: Cannot read property 'name' of undefined
+
+var person = new Person('John');
+console.log(person); // Person { name: "John" }
+console.log(person.name); // "john"
+↥ back to top
+Q. What is the difference between .call and .apply?
+Both .call and .apply are used to invoke functions and the first parameter will be used as the value of this within the function. However, .call takes in comma-separated arguments as the next arguments while .apply takes in an array of arguments as the next argument. An easy way to remember this is C for call and comma-separated and A for apply and an array of arguments.
+
+function add(a, b) {
+  return a + b;
+}
+
+console.log(add.call(null, 1, 2)); // 3
+console.log(add.apply(null, [1, 2])); // 3
+↥ back to top
+Q. Explain Function.prototype.bind?
+MDN:
+
+The bind() method creates a new function that, when called, has its this keyword set to the provided value, with a given sequence of arguments preceding any provided when the new function is called.
+
+In my experience, it is most useful for binding the value of this in methods of classes that you want to pass into other functions. This is frequently done in React components.
+
+
+Q. What is the difference between == and ===?
+== is the abstract equality operator while === is the strict equality operator. The == operator will compare for equality after doing any necessary type conversions. The === operator will not do type conversion, so if two values are not the same type === will simply return false. When using ==, funky things can happen, such as:
+
+1 == '1'; // true
+1 == [1]; // true
+1 == true; // true
+0 == ''; // true
+0 == '0'; // true
+0 == false; // true
+My advice is never to use the == operator, except for convenience when comparing against null or undefined, where a == null will return true if a is null or undefined.
+
+var a = null;
+console.log(a == null); // true
+console.log(a == undefined); // true
+
+
+Q. What is event loop? What is the difference between call stack and task queue?
+The event loop is a single-threaded loop that monitors the call stack and checks if there is any work to be done in the task queue. If the call stack is empty and there are callback functions in the task queue, a function is dequeued and pushed onto the call stack to be executed.
+
+If you haven't already checked out Philip Robert's talk on the Event Loop, you should. It is one of the most viewed videos on JavaScript.
+
+
+
+=====================08=====================
+Q. Explain the differences on the usage of foo between function foo() {} and var foo = function() {}?
+The former is a function declaration while the latter is a function expression. The key difference is that function declarations have its body hoisted but the bodies of function expressions are not (they have the same hoisting behavior as variables). For more explanation on hoisting, refer to the question above on hoisting. If you try to invoke a function expression before it is defined, you will get an Uncaught TypeError: XXX is not a function error.
+
+Function Declaration
+
+foo(); // 'FOOOOO'
+function foo() {
+  console.log('FOOOOO');
+}
+Function Expression
+
+foo(); // Uncaught TypeError: foo is not a function
+var foo = function() {
+  console.log('FOOOOO');
+};
+↥ back to top
+Q. What are the differences between variables created using let, var or const?
+Variables declared using the var keyword are scoped to the function in which they are created, or if created outside of any function, to the global object. let and const are block scoped, meaning they are only accessible within the nearest set of curly braces (function, if-else block, or for-loop).
+
+function foo() {
+  // All variables are accessible within functions.
+  var bar = 'bar';
+  let baz = 'baz';
+  const qux = 'qux';
+
+  console.log(bar); // bar
+  console.log(baz); // baz
+  console.log(qux); // qux
+}
+
+console.log(bar); // ReferenceError: bar is not defined
+console.log(baz); // ReferenceError: baz is not defined
+console.log(qux); // ReferenceError: qux is not defined
+if (true) {
+  var bar = 'bar';
+  let baz = 'baz';
+  const qux = 'qux';
+}
+
+// var declared variables are accessible anywhere in the function scope.
+console.log(bar); // bar
+// let and const defined variables are not accessible outside of the block they were defined in.
+console.log(baz); // ReferenceError: baz is not defined
+console.log(qux); // ReferenceError: qux is not defined
+var allows variables to be hoisted, meaning they can be referenced in code before they are declared. let and const will not allow this, instead throwing an error.
+
+console.log(foo); // undefined
+var foo = 'foo';
+
+console.log(baz); // ReferenceError: can't access lexical declaration 'baz' before initialization
+let baz = 'baz';
+
+console.log(bar); // ReferenceError: can't access lexical declaration 'bar' before initialization
+const bar = 'bar';
+Redeclaring a variable with var will not throw an error, but 'let' and 'const' will.
+
+var foo = 'foo';
+var foo = 'bar';
+console.log(foo); // "bar"
+
+let baz = 'baz';
+let baz = 'qux'; // Uncaught SyntaxError: Identifier 'baz' has already been declared
+let and const differ in that let allows reassigning the variable's value while const does not.
+
+// This is fine.
+let foo = 'foo';
+foo = 'bar';
+
+// This causes an exception.
+const baz = 'baz';
+baz = 'qux';
+↥ back to top
+Q. What is the definition of a higher-order function?
+A higher-order function is any function that takes one or more functions as arguments, which it uses to operate on some data, and/or returns a function as a result. Higher-order functions are meant to abstract some operation that is performed repeatedly. The classic example of this is map, which takes an array and a function as arguments. map then uses this function to transform each item in the array, returning a new array with the transformed data. Other popular examples in JavaScript are forEach, filter, and reduce. A higher-order function doesn't just need to be manipulating arrays as there are many use cases for returning a function from another function. Function.prototype.bind is one such example in JavaScript.
+
+Map
+
+Let say we have an array of names which we need to transform each string to uppercase.
+
+const names = ['irish', 'daisy', 'anna'];
+The imperative way will be as such:
+
+const transformNamesToUppercase = function(names) {
+  const results = [];
+  for (let i = 0; i < names.length; i++) {
+    results.push(names[i].toUpperCase());
+  }
+  return results;
+};
+transformNamesToUppercase(names); // ['IRISH', 'DAISY', 'ANNA']
+Use .map(transformerFn) makes the code shorter and more declarative.
+
+const transformNamesToUppercase = function(names) {
+  return names.map(name => name.toUpperCase());
+};
+transformNamesToUppercase(names); // ['IRISH', 'DAISY', 'ANNA']
+↥ back to top
+Q. Can you give an example of a curry function and why this syntax offers an advantage?
+Currying is a pattern where a function with more than one parameter is broken into multiple functions that, when called in series, will accumulate all of the required parameters one at a time. This technique can be useful for making code written in a functional style easier to read and compose. It is important to note that for a function to be curried, it needs to start out as one function, then broken out into a sequence of functions that each accepts one parameter.
+
+function curry(fn) {
+  if (fn.length === 0) {
+    return fn;
+  }
+
+  function _curried(depth, args) {
+    return function(newArgument) {
+      if (depth - 1 === 0) {
+        return fn(...args, newArgument);
+      }
+      return _curried(depth - 1, [...args, newArgument]);
+    };
+  }
+
+  return _curried(fn.length, []);
+}
+
+function add(a, b) {
+  return a + b;
+}
+
+var curriedAdd = curry(add);
+var addFive = curriedAdd(5);
+
+var result = [0, 1, 2, 3, 4, 5].map(addFive); // [5, 6, 7, 8, 9, 10]
+
+
+
+Q. Difference between Function, Method and Constructor calls in JavaScript?
+If your are familiar with Object-oriented programming, More likely familiar to thinking of functions, methods, and class constructors as three separate things. But In JavaScript, these are just three different usage patterns of one single construct.
+
+functions : The simplest usages of function call:
+
+function helloWorld(name) {
+  return "hello world, " + name;
+}
+
+helloWorld("JS Geeks"); // "hello world JS Geeks"
+Methods in JavaScript are nothing more than object properties that are functions.
+
+var obj = {
+  helloWorld : function() {
+    return "hello world, " + this.name;
+  },
+  name: 'John Carter'
+}
+obj.helloWorld(); // // "hello world John Carter"
+Notice how helloWorld refer to this properties of obj. Here It is clear or you might have already understood that this gets bound to obj. But the interesting point that we can copy a reference to the same function helloWorld in another object and get a difference answer. Let see:
+
+var obj2 = {
+  helloWorld : obj.helloWorld,
+  name: 'John Doe'
+}
+obj2.helloWorld(); // "hello world John Doe"
+You might be wonder what exactly happens in a method call here. Here we call the expression itself determine the binding of this this, The expression obj2.helloWorld() looks up the helloWorld property of obj and calls it with receiver object obj2.
+
+The third use of functions is as constructors. Like function and method, constructors are defined with function.
+
+function Employee(name, age) {
+  this.name = name;
+  this.age = age;
+}
+
+var emp1 = new Employee('John Doe', 28);
+emp1.name; // "John Doe"
+emp1.age; // 28
+Unlike function calls and method calls, a constructor call new Employee('John Doe', 28) creates a brand new object and passes it as the value of this, and implicitly returns the new object as its result.
+
+The primary role of the constructor function is to initialize the object.
+
+
+
+=====================09=====================
+Q. What is IIFE (Immediately Invoked Function Expression) and how it can be useful?
+IIFE a function that runs as soon as It is defined. Usually It is anonymous (doesn't have a function name), but it also can be named. Here's an example of IIFE:
+
+(function() {
+  console.log("Hi, I'm IIFE!");
+})();
+// outputs "Hi, I'm IIFE!"
+So, here's how it works. Remember the difference between function statements (function a () {}) and function expressions (var a = function() {})? So, IIFE is a function expression. To make it an expression we surround our function declaration into the parens. We do it to explicitly tell the parser that It is an expression, not a statement (JS doesn't allow statements in parens).
+
+After the function you can see the two () braces, this is how we run the function we just declared.
+
+That's it. The rest is details.
+
+The function inside IIFE doesn't have to be anonymous. This one will work perfectly fine and will help to detect your function in a stacktrace during debugging:
+(function myIIFEFunc() {
+  console.log("Hi, I'm IIFE!");
+})();
+// outputs "Hi, I'm IIFE!"
+It can take some parameters:
+(function myIIFEFunc(param1) {
+  console.log("Hi, I'm IIFE, " + param1);
+})("Yuri");
+// outputs "Hi, I'm IIFE, Yuri!"
+Here there value "Yuri" is passed to the param1 of the function.
+It can return a value:
+var result = (function myIIFEFunc(param1) {
+  console.log("Hi, I'm IIFE, " + param1);
+  return 1;
+})("Yuri");
+// outputs "Hi, I'm IIFE, Yuri!"
+// result variable will contain 1
+You do not have to surround the function declaration into parens, although It is the most common way to define IIFE. Instead you can use any of the following forms:
+~function(){console.log("hi I'm IIFE")}()
+!function(){console.log("hi I'm IIFE")}()
++function(){console.log("hi I'm IIFE")}()
+-function(){console.log("hi I'm IIFE")}()
+(function(){console.log("hi I'm IIFE")}());
+var i = function(){console.log("hi I'm IIFE")}();
+true && function(){ console.log("hi I'm IIFE") }();
+0, function(){ console.log("hi I'm IIFE") }();
+new function(){ console.log("hi I'm IIFE") }
+new function(){ console.log("hi I'm IIFE") }()
+Applications and usefulness
+
+Variables and functions that you declare inside an IIFE are not visible to the outside world, so you can:
+
+Use the IIFE for isolating parts of the code to hide details of implementation.
+Specify the input interface of your code by passing commonly used global objects (window, document, jQuery, etc.) IIFE’s parameters, and then reference these global objects within the IIFE via a local scope.
+Use it in closures, when you use closures in loops.
+IIFE is the basis of in the module pattern in ES5 code, it helps to prevent polluting the global scope and provide the module interface to the outside.
+
+
+
+Q. What are promises and how they are useful?
+We use promises for handling asynchronous interactions in a sequential manner. They are especially useful when we need to do an async operation and THEN do another async operation based on the results of the first one. For example, if you want to request the list of all flights and then for each flight you want to request some details about it. The promise represents the future value. It has an internal state (pending, fulfilled and rejected) and works like a state machine.
+
+A promise object has then method, where you can specify what to do when the promise is fulfilled or rejected.
+
+You can chain then() blocks, thus avoiding the callback hell. You can handle errors in the catch() block. After a promise is set to fulfilled or rejected state, it becomes immutable.
+
+Also mention that you know about more sophisticated concepts:
+
+async/await which makes the code appear even more linear
+RxJS observables can be viewed as the recyclable promises
+Be sure that you can implement the promise, read one of the articles on a topic, and learn the source code of the simplest promise implementation.
+
+
+
+
+=====================10=====================
+Q. What is Function binding ?
+Function binding falls in advance JavaScript category and this is very popular technique to use in conjunction with event handler and callback function to preserve code execution context while passing function as a parameter.
+
+Example:
+
+var clickHandler = {
+	message: 'click event handler',
+	handleClick: function(event) {
+		console.log(this.message);
+	}
+};
+
+var btn = document.getElementById('myBtn');
+// Add click event to btn
+btn.addEventListener('click', clickHandler.handleClick);
+Here in this example clickHandler object is created which contain message properties and handleClick method.
+
+We have assigned handleClick method to a DOM button, which will be executed in response of click. When the button is clicked, then handleClick method is being called and console message. Here console.log should log the click event handler message but it actually log undefined.
+
+The problem of displaying undefined is because of the execution context of clickHandler.handleClick method is not being saved hence this pointing to button btn object. We can fix this issue using bind method.
+
+var clickHandler = {
+	message: 'click event handler',
+	handleClick: function(event) {
+		console.log(this.message);
+	}
+};
+
+var btn = document.getElementById('myBtn');
+// Add click event to btn and bind the clickHandler object
+btn.addEventListener('click', clickHandler.handleClick.bind(clickHandler));
+bind method is available to all the function similar to call and apply method which take argument value of this.
+
+↥ back to top
+Q. Explain how this works in JavaScript?
+The following rules are applied when we use this keyword in javascript
+
+If the new keyword is used when calling the function, this inside the function is a brand new object.
+If apply, call, or bind are used to call/create a function, this inside the function is the object that is passed in as the argument.
+If a function is called as a method, such as obj.method() — this is the object that the function is a property of.
+If a function is invoked as a free function invocation, meaning it was invoked without any of the conditions present above, this is the global object. In a browser, it is the window object. If in strict mode ('use strict'), this will be undefined instead of the global object.
+If multiple of the above rules apply, the rule that is higher wins and will set the this value.
+If the function is an ES2015 arrow function, it ignores all the rules above and receives the this value of its surrounding scope at the time it is created.
+↥ back to top
+Q. Explain how prototypal inheritance works?
+All JavaScript objects have a prototype property, that is a reference to another object. When a property is accessed on an object and if the property is not found on that object, the JavaScript engine looks at the object's prototype, and the prototype's prototype and so on, until it finds the property defined on one of the prototypes or until it reaches the end of the prototype chain.
+
+Example:
+
+We already have a build-in Object.create, but if you were to provide a polyfill for it, that might look like:
+
+if (typeof Object.create !== 'function') {
+  Object.create = function (parent) {
+    function Tmp() {}
+    Tmp.prototype = parent;
+    return new Tmp();
+  };
+}
+
+const Parent = function() {
+  this.name = "Parent";
+}
+
+Parent.prototype.greet = function() { console.log("hello from Parent"); }
+
+const child = Object.create(Parent.prototype);
+
+child.cry = function() {
+  console.log("waaaaaahhhh!");
+}
+
+child.cry();
+// Outputs: waaaaaahhhh!
+
+child.greet();
+// Outputs: hello from Parent
+Things to note are:
+
+.greet is not defined on the child, so the engine goes up the prototype chain and finds .greet off the inherited from Parent.
+We need to call Object.create in one of following ways for the prototype methods to be inherited:
+Object.create(Parent.prototype);
+Object.create(new Parent(null));
+Object.create(objLiteral);
+Currently, child.constructor is pointing to the Parent:
+child.constructor
+ƒ () {
+  this.name = "Parent";
+}
+child.constructor.name
+"Parent"
+If we'd like to correct this, one option would be to do:
+function Child() {
+  Parent.call(this);
+  this.name = 'child';
+}
+
+Child.prototype = Parent.prototype;
+Child.prototype.constructor = Child;
+
+const c = new Child();
+
+c.cry();
+// Outputs: waaaaaahhhh!
+
+c.greet();
+// Outputs: hello from Parent
+
+c.constructor.name;
+// Outputs: "Child"
+↥ back to top
+Q. Can you describe the main difference between a .forEach loop and a .map() loop and why you would pick one versus the other?
+To understand the differences between the two, Let us look at what each function does.
+
+forEach
+
+Iterates through the elements in an array.
+Executes a callback for each element.
+Does not return a value.
+const a = [1, 2, 3];
+const doubled = a.forEach((num, index) => {
+  // Do something with num and/or index.
+});
+
+// doubled = undefined
+map
+
+Iterates through the elements in an array.
+"Maps" each element to a new element by calling the function on each element, creating a new array as a result.
+const a = [1, 2, 3];
+const doubled = a.map(num => {
+  return num * 2;
+});
+
+// doubled = [2, 4, 6]
+The main difference between .forEach and .map() is that .map() returns a new array. If you need the result, but do not wish to mutate the original array, .map() is the clear choice. If you simply need to iterate over an array, forEach is a fine choice.
+
+
+What is the purpose of array slice method?
+The slice() method returns the selected elements in an array as a new array object. It selects the elements starting at the given start argument, and ends at the given optional end argument without including the last element. If you omit the second argument then it selects till the end. Some of the examples of this method are,
+
+let arrayIntegers = [1, 2, 3, 4, 5];
+let arrayIntegers1 = arrayIntegers.slice(0,2); // returns [1,2]
+let arrayIntegers2 = arrayIntegers.slice(2,3); // returns [3]
+let arrayIntegers3 = arrayIntegers.slice(4); //returns [5]
+Note: Slice method wonot mutate the original array but it returns the subset as new array.
+
+↥ back to top
+Q. What is the purpose of array splice method?
+The splice() method is used either adds/removes items to/from an array, and then returns the removed item. The first argument specifies the array position for insertion or deletion whereas the option second argument indicates the number of elements to be deleted. Each additional argument is added to the array. Some of the examples of this method are,
+
+let arrayIntegersOriginal1 = [1, 2, 3, 4, 5];
+let arrayIntegersOriginal2 = [1, 2, 3, 4, 5];
+let arrayIntegersOriginal3 = [1, 2, 3, 4, 5];
+
+let arrayIntegers1 = arrayIntegersOriginal1.splice(0,2); // returns [1, 2]; original array: [3, 4, 5]
+let arrayIntegers2 = arrayIntegersOriginal2.splice(3); // returns [4, 5]; original array: [1, 2, 3]
+let arrayIntegers3 = arrayIntegersOriginal3.splice(3, 1, "a", "b", "c"); //returns [4]; original array: [1, 2, 3, "a", "b", "c", 5]
+Note: Splice method modifies the original array and returns the deleted array.
+
+↥ back to top
+Q. What is the difference between slice and splice?
+Some of the major difference in a tabular form
+
+Slice	Splice
+Doesn't modify the original array(immutable)	Modifies the original array(mutable)
+Returns the subset of original array	Returns the deleted elements as array
+Used to pick the elements from array	Used to insert or delete elements to/from array
+
+
+
+Q. What unit testing framework do you use? and why?
+Unit testing is the process of testing the implemented code at a module level. Unit testing allows you to ensure that your developed modules are meeting the requirements specified by the business document. These tests are written for every module as they are created.
+
+Unit testing provides numerous benefits including finding software bugs early, facilitating change, simplifying integration, providing a source of documentation, and many others, which we will look right now with more detail.
+
+Makes the Process Agile
+Quality of Code
+Finds Software Bugs Early
+Facilitates Changes and Simplifies Integration
+Provides Documentation
+Debugging Process
+Design
+Reduce Costs
+Challenges in JavaScript Unit Testing
+
+Many other languages support unit testing in browsers, in the stable as well as in runtime environment but JavaScript can not
+You can understand some system actions with other languages, but this is not the case with JavaScript
+Some JavaScript are written for a web application may have multiple dependencies
+JavaScript is good to use in combination with HTML and CSS rather than on the web
+Difficulties with page rendering and DOM manipulation
+JavaScript Unit Testing Frameworks
+
+Unit.js: It is known as an open source assertion library running on browser and Node.js. It is extremely compatible with other JavaScript Unit Testing frameworks like Mocha, Karma, Jasmine, QUnit, Protractor, etc. Provides the full documented API of assertion list
+
+QUnit: It is used for both client-side as well as server-side JavaScript Unit Testing. This Free framework is used for jQuery projects. It follows Common JS unit testing Specification for unit testing. It supports the Node Long-term Support Schedule.
+
+Jasmine: Jasmine is the behavior-driven development framework for JavaScript unit Testing. It is used for testing both synchronous and asynchronous JavaScript Code. It does not require DOM and comes with the easy syntax that can be Written for any test.
+
+Karma: Karma is an open source productive testing environment. Easy workflow control Running on the command line. Offers the freedom to write the tests with Jasmine, Mocha, and QUnit. You can run the test on real devices with easy debugging.
+
+Mocha: Mocha runs on Node.js and in the browser. Mocha performs asynchronous Testing in a simpler way. Provides accuracy and flexibility in reporting. Provides tremendous support of rich features such as test-specific timeouts, JavaScript APIs etc.
+
+Jest: Jest is used by Facebook so far to test all of the JavaScript code. It provides the 'zero-configuration' testing experience. Supports independent and non-interrupting running test without any conflict. Do not require any other setup configuration and libraries.
+
+AVA: AVA is simple JavaScript Unit Testing Framework. Tests are being run in parallel and serially. Parallel tests run without interrupting each other. AVA Supports asynchronous testing as well. AVA uses subprocesses to run the test.
+
+
+
+Q. Explain array methods [ join(), pop(), push(), shift(), unshift(), concat(), map(), filter(), reduce(), reduceRight(), every(), some(), indexOf(), lastIndexOf(), find(), findIndex(), includes() ]
+a.) array.join(): The join() method creates and returns a new string by concatenating all of the elements in an array (or an array-like object), separated by commas or a specified separator string. If the array has only one item, then that item will be returned without using the separator.
+
+var elements = ['Fire', 'Air', 'Water'];
+
+console.log(elements.join()); // Output: "Fire,Air,Water"
+console.log(elements.join('')); // Output: "FireAirWater"
+console.log(elements.join('-')); // Output: "Fire-Air-Water"
+b.) array.pop(): The pop() method removes the last element from an array and returns that element. This method changes the length of the array.
+
+var plants = ['broccoli', 'cauliflower', 'kale'];
+
+console.log(plants.pop()); // Output: "kale"
+console.log(plants); // Output: Array ["broccoli", "cauliflower"]
+console.log(plants.pop()); // Output: "cauliflower"
+console.log(plants.pop()); // Output: "broccoli"
+console.log(plants.pop()); // Output: "undefined"
+c.) array.push(): The push() method adds one or more elements to the end of an array and returns the new length of the array.
+
+const animals = ['pigs', 'goats', 'sheep'];
+
+const count = animals.push('cows');
+console.log(count); // Output: 4
+console.log(animals); // Output: Array ["pigs", "goats", "sheep", "cows"]
+d.) array.shift(): The shift() method removes the first element from an array and returns that removed element. This method changes the length of the array.
+
+var fruits = ["Banana", "Orange", "Apple", "Mango"];
+fruits.shift();
+console.log(fruits) // Output: Array ["Orange", "Apple", "Mango"]
+e.) array.unshift(): The unshift() method adds one or more elements to the beginning of an array and returns the new length of the array.
+
+var fruits = ["Banana", "Orange", "Apple"];
+fruits.unshift("Mango","Pineapple");
+console.log(fruits); // Output: Array ["Mango", "Pineapple", "Banana", "Orange", "Apple"]
+f.) array.concat(): The concat() method is used to merge two or more arrays. This method does not change the existing arrays, but instead returns a new array.
+
+const array1 = ['a', 'b', 'c'];
+const array2 = ['d', 'e', 'f'];
+
+console.log(array1.concat(array2)); // Output: Array ["a", "b", "c", "d", "e", "f"]
+g.) array.map(): The map() method creates a new array with the results of calling a provided function on every element in the calling array.
+
+var array1 = [1, 4, 9, 16];
+
+// pass a function to map
+const map1 = array1.map(x => x * 2); 
+
+console.log(map1); // Output: Array [2, 8, 18, 32]
+h.) array.filter(): The filter() method creates a new array with all elements that pass the test implemented by the provided function.
+
+var words = ['spray', 'limit', 'elite', 'exuberant', 'destruction'];
+
+const result = words.filter(word => word.length > 6);
+
+console.log(result); // Output: Array ["exuberant", "destruction"]
+i.) array.reduce(): The reduce() method executes a reducer function (that you provide) on each element of the array, resulting in a single output value.
+
+const array1 = [1, 2, 3, 4];
+const reducer = (accumulator, currentValue) => accumulator + currentValue;
+
+console.log(array1.reduce(reducer)); // Output: 10
+console.log(array1.reduce(reducer, 5)); // Output: 15
+j.) array.reduceRight(): The reduceRight() method applies a function against an accumulator and each value of the array (from right-to-left) to reduce it to a single value.
+
+const array1 = [[0, 1], [2, 3], [4, 5]].reduceRight(
+  (accumulator, currentValue) => accumulator.concat(currentValue)
+);
+
+console.log(array1); // Output: Array [4, 5, 2, 3, 0, 1]
+k.) array.every(): The every() method tests whether all elements in the array pass the test implemented by the provided function. It returns a Boolean value.
+
+function isBelowThreshold(currentValue) {
+  return currentValue < 40;
+}
+
+var array1 = [1, 30, 39, 29, 10, 13];
+console.log(array1.every(isBelowThreshold)); // Output: true
+l.) array.some(): The some() method tests whether at least one element in the array passes the test implemented by the provided function. It returns a Boolean value.
+
+var array = [1, 2, 3, 4, 5];
+
+var even = function(element) {
+  // checks whether an element is even
+  return element % 2 === 0;
+};
+
+console.log(array.some(even)); // Output: true
+m.) array.indexOf(): The indexOf() method returns the first index at which a given element can be found in the array, or -1 if it is not present.
+
+var beasts = ['ant', 'bison', 'camel'];
+
+console.log(beasts.indexOf('camel')); // Output: 2
+console.log(beasts.indexOf('giraffe')); // Output: -1
+n.) array.lastIndexOf(): The lastIndexOf() method returns the index within the calling String object of the last occurrence of the specified value, searching backwards from fromIndex. Returns -1 if the value is not found.
+
+var paragraph = 'The quick brown fox jumps over the lazy dog. If the dog barked, was it really lazy?';
+
+var searchTerm = 'dog';
+
+console.log('The index of the first "' + searchTerm + '" from the end is ' + paragraph.lastIndexOf(searchTerm));
+// Output: "The index of the first "dog" from the end is 52"
+o.) array.find(): The find() method returns the value of the first element in the provided array that satisfies the provided testing function.
+
+var array1 = [5, 12, 8, 130, 44];
+
+var found = array1.find(function(element) {
+  return element > 100;
+});
+
+console.log(found); // Output: 130
+p.) array.findIndex(): The findIndex() method returns the index of the first element in the array that satisfies the provided testing function. Otherwise, it returns -1, indicating that no element passed the test.
+
+var array1 = [5, 12, 8, 130, 44];
+
+function isLargeNumber(element) {
+  return element > 20;
+}
+
+console.log(array1.findIndex(isLargeNumber)); // Output: 3
+q.) array.includes(): The includes() method determines whether an array includes a certain value among its entries, returning true or false as appropriate.
+
+var array1 = [1, 2, 3];
+console.log(array1.includes(2)); // Output: true
+
+var pets = ['cat', 'dog', 'bat'];
+console.log(pets.includes('at')); // Output: false
+↥ back to top
+Q. When to use function declarations and expressions in JavaScript?
+Function Declarations A declared function is “saved for later use”, and will be executed later, when it is invoked (called).
+
+// Function declaration
+function add(num1, num2) {
+	return num1 + num2;
+}
+function is only declared here. For using it, it must be invoked using function name. e.g add(10, 20);
+
+Function Expression
+A function expression can be stored in a variable:
+
+// Function expression
+var add = function (num1, num2) {
+	return num1 + num2;
+};
+After a function expression has been stored in a variable, the variable can be used as a function. Functions stored in variables do not need function names. They are always invoked (called) using the variable name.
+
+Difference
+
+Function declarations load before any code is executed while Function expressions load only when the interpreter reaches that line of code.
+Similar to the var statement, function declarations are hoisted to the top of other code. Function expressions aren’t hoisted, which allows them to retain a copy of the local variables from the scope where they were defined.
+Benefits of Function Expressions
+There are several different ways that function expressions become more useful than function declarations.
+
+As closures
+As arguments to other functions
+As Immediately Invoked Function Expressions (IIFE)
+↥ back to top
+Q. How to avoid callback hell in javascript?
+Callback hell is a phenomenon that afflicts a JavaScript developer when he tries to execute multiple asynchronous operations one after the other. Some people call it to be the pyramid of doom.
+
+Example
+
+doSomething(param1, param2, function(err, paramx){
+    doMore(paramx, function(err, result){
+        insertRow(result, function(err){
+            yetAnotherOperation(someparameter, function(s){
+                somethingElse(function(x){
+                });
+            });
+        });
+    });
+});
+Techniques for avoiding callback hell
+
+Write comments
+Split functions into smaller functions
+Using Async.js
+Using Promises
+Using Async-Await
+
