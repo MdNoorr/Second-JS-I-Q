@@ -1,6 +1,4 @@
 =====================01======================
-
-
 Q. When to use reduce(), map(), foreach() and filter() in JavaScript?
 forEach()
 It takes a callback function and run that callback function on each element of array one by one.
@@ -17,6 +15,7 @@ Output
 10 comes at 0
 20 comes at 1
 30 comes at 2
+
 filter()
 The main difference between forEach() and filter() is that forEach just loop over the array and executes the callback but filter executes the callback and check its return value. If the value is true element remains in the resulting array but if the return value is false the element will be removed for the resulting array.
 
@@ -31,6 +30,7 @@ console.log(result)
 Output
 
 [10, 30]
+
 map()
 map() like filter() & forEach() takes a callback and run it against every element on the array but whats makes it unique is it generate a new array based on your existing array.
 
@@ -54,7 +54,8 @@ var sum = arr.reduce(function(sum, elem) {
     return sum + elem;
 });
 console.log(sum); // Output: 60
-↥ back to top
+
+
 Q. What is Hoisting in JavaScript?
 Hoisting is a JavaScript mechanism where variables and function declarations are moved to the top of their scope before code execution.
 
@@ -67,6 +68,7 @@ The above code looks like as below to the interpreter,
 var message;
 console.log(message);
 message = "The variable Has been hoisted";
+
 Example 02: Function Hoisting
 
 function hoist() {
@@ -96,9 +98,10 @@ let a = 3;
 // Output: ReferenceError: a is not defined
 They will only get initialized when their lexical binding (assignment) is evaluated during runtime by the JavaScript engine. This means we can’t access the variable before the engine evaluates its value at the place it was declared in the source code. This is what we call Temporal Dead Zone, A time span between variable creation and its initialization where they can’t be accessed.
 
-Note: JavaScript only hoists declarations, not initialisation
+Note: JavaScript only hoists declarations, not initialization
 
-↥ back to top
+
+
 Q. What are closures?
 A closure is the combination of a function and the lexical environment within which that function was declared. i.e, It is an inner function that has access to the outer or enclosing function’s variables. The closure has three scope chains
 
@@ -116,7 +119,8 @@ myFunction('Welcome '); // Output: Welcome John
 myFunction('Hello Mr.'); // output: Hello Mr.John
 As per the above code, the inner function greetingInfo() has access to the variables in the outer function Welcome() even after outer function has returned.
 
-↥ back to top
+
+
 Q. How do you clone an object in JavaScript?
 Using the object spread operator ..., the object own enumerable properties can be copied into the new object. This creates a shallow clone of the object.
 
@@ -126,12 +130,14 @@ With this technique, prototypes are ignored. In addition, nested objects are not
 
 Other alternatives include:
 
+
 JSON.parse(JSON.stringify(obj)) can be used to deep-clone a simple object, but it is CPU-intensive and only accepts valid JSON (therefore it strips functions and does not allow circular references).
 Object.assign({}, obj) is another alternative.
 Object.keys(obj).reduce((acc, key) => (acc[key] = obj[key], acc), {}) is another more verbose alternative that shows the concept in greater depth.
-↥ back to top
+
+
 Q. What are the possible ways to create objects in JavaScript?
-a.) Object constructor: The simpliest way to create an empty object is using Object constructor. Currently this approach is not recommended.
+a.) Object constructor: The simplest way to create an empty object is using Object constructor. Currently this approach is not recommended.
 
  var object = new Object();
 b.) Object create method: The create method of Object creates a new object by passing the prototype object as a parameter
@@ -184,7 +190,8 @@ g.) Singleton pattern: A Singleton is an object which can only be instantiated o
 var object = new function() {
   this.name = "Alex";
 }
-↥ back to top
+
+
 Q. What are the javascript data types?
 There are eight basic data types in JavaScript.
 
@@ -288,14 +295,17 @@ const employee = {
     lastName: 'K',
     email: 'john.k@gmail.com'
 };
-↥ back to top
+
+
 Q. What are global variables?
+
 Global variables are those that are available throughout the length of the code without any scope. The var keyword is used to declare a local variable but if you omit it then it will become global variable
 
 msg = "Hello" // var is missing, it becomes global variable
 The problem with global variables is the conflict of variable names of local and global scope. It is also difficult to debug and test the code that relies on global variables.
 
-↥ back to top
+
+
 Q. What is variable shadowing in javascript?
 Variable shadowing occurs when a variable declared within a certain scope (decision block, method, or inner class) has the same name as a variable declared in an outer scope. This outer variable is said to be shadowed.
 
@@ -308,10 +318,8 @@ function Hoist(val) {
 }
 
 Hoist(20);
-Output
 
-20
-↥ back to top
+
 Q. What is an event flow?
 Event flow is the order in which event is received on the web page. When you click an element that is nested in various other elements, before your click actually reaches its destination, or target element, it must trigger the click event each of its parent elements first, starting at the top with the global window object.
 
@@ -319,7 +327,8 @@ There are two ways of event flow
 
 Top to Bottom(Event Capturing)
 Bottom to Top (Event Bubbling)
-↥ back to top
+
+
 Q. What is event bubbling?
 Event bubbling is a type of event propagation where the event first triggers on the innermost target element, and then successively triggers on the ancestors (parents) of the target element in the same nesting hierarchy till it reaches the outermost DOM element.
 
@@ -332,11 +341,13 @@ Stopping bubbling
 <body onclick="alert(`the bubbling doesn\'t reach here`)">
   <button onclick="event.stopPropagation()">Click me</button>
 </body>
-↥ back to top
+
+
 Q. What is event capturing?
 Event capturing is a type of event propagation where the event is first captured by the outermost element and then successively triggers on the descendants (children) of the target element in the same nesting hierarchy till it reaches the inner DOM element.
 
-↥ back to top
+
+
 Q. What is prototype chain?
 Nearly all objects in JavaScript are instances of Object. That means all the objects in JavaScript inherit the properties and methods from Object.prototype. This is called Prototype chaining.
 
@@ -358,7 +369,8 @@ var person = new Person("John", "K", 25);
 > person.hasOwnProperty("firstName");  // true
 > person.hasOwnProperty("getFullName");  // false
 > person.getFullName(); // John K
-↥ back to top
+
+
 Q. What is the difference between Call, Apply and Bind?
 a.) call()
 
@@ -401,7 +413,8 @@ var inviteEmployee1 = invite.bind(employee1);
 var inviteEmployee2 = invite.bind(employee2);
 inviteEmployee1('Hello', 'How are you?'); // Hello John Rodson, How are you?
 inviteEmployee2('Hello', 'How are you?'); // Hello Jimmy Baily, How are you?
-↥ back to top
+
+
 Q. What is the difference between == and === operators?
 JavaScript provides both strict(===, !==) and type-converting(==, !=) equality comparison. The strict operators takes type of variable in consideration, while non-strict operators make type correction/conversion based upon values of variables. The strict operators follow the below conditions for different types,
 
@@ -424,7 +437,8 @@ null === undefined // false
 '0' === false // false
 []==[] or []===[] //false, refer different objects in memory
 {}=={} or {}==={} //false, refer different objects in memory
-↥ back to top
+
+
 Q. What is a first class function?
 JavaScript functions are first-class functions meaning functions and objects are treated as the same thing. Functions can be stored as a variable inside an object or an array as well as it can be passed as an argument or be returned by another function. That makes function "first-class citizens in JavaScript"
 
@@ -471,7 +485,8 @@ function sayHello() {
 sayHello()();
 We are using double parentheses ()() to invoke the returned function as well.
 
-↥ back to top
+
+
 Q. What is a higher order function?
 A Higher-Order function is a function that receives a function as an argument or returns the function as output.
 
@@ -482,12 +497,15 @@ const arr2 = arr1.map(function(item) {
   return item * 2;
 });
 console.log(arr2);
-↥ back to top
+
+
 Q. What is a unary function?
 Unary function (i.e. monadic) is a function that accepts exactly one argument. Let us take an example of unary function. It stands for single argument accepted by a function.
 
-const unaryFunction = a => console.log (a + 10); //Add 10 to the given argument and display the value
-↥ back to top
+const unaryFunction = a => console.log (a + 10); 
+// Add 10 to the given argument and display the value
+
+
 Q. What is currying function?
 Currying is the process of taking a function with multiple arguments and turning it into a sequence of functions each with only a single argument.
 
@@ -502,7 +520,8 @@ function volume(length) {
 volume(2)(3)(4); // 24
 Curried functions are great to improve code re-usability and functional composition.
 
-↥ back to top
+
+
 Q. What is a pure function?
 Pure functions are functions that accept an input and returns a value without modifying any data outside its scope(Side Effects). Its output or return value must depend on the input/arguments and pure functions must return a value.
 
@@ -550,7 +569,8 @@ Benefits
 One of the major benefits of using pure functions is they are immediately testable. They will always produce the same result if you pass in the same arguments.
 The pure functions are easier to parallelize
 They also makes maintaining and refactoring code much easier.
-↥ back to top
+
+
 Q. What is memoization in JavaScript?
 Memoization is a programming technique which attempts to increase a function’s performance by caching its previously computed results. Each time a memoized function is called, its parameters are used to index the cache. If the data is present, then it can be returned, without executing the entire function. Otherwise the function is executed and then the result is added to the cache.
 
@@ -592,7 +612,8 @@ Promises have three states:
 Pending: This is an initial state of the Promise before an operation begins
 Fulfilled: This state indicates that specified operation was completed.
 Rejected: This state indicates that the operation did not complete. In this case an error value will be thrown.
-↥ back to top
+
+
 Q. What is a callback function?
 A callback function is a function passed into another function as an argument. This function is invoked inside the outer function to complete an action.
 
@@ -606,7 +627,8 @@ function outerFunction(callback) {
 }
 
 outerFunction(callbackFunction);
-↥ back to top
+
+
 Q. Why do we need callbacks?
 The callbacks are needed because javascript is a event driven language. That means instead of waiting for a response javascript will keep executing while listening for other events.
 
@@ -629,7 +651,8 @@ Output
 // First function called
 As observed from the output, javascript didnot wait for the response of first function and remaining code block get executed. So callbacks used in a way to make sure that certain code does not execute until other code finished execution.
 
-↥ back to top
+
+
 Q. What is a callback hell?
 Callback Hell is an anti-pattern with multiple nested callbacks which makes code hard to read and debug when dealing with asynchronous logic. The callback hell looks like below,
 
@@ -664,7 +687,8 @@ loadScript('/script1.js', function(script) {
     });
   })
 });
-↥ back to top
+
+
 Q. What is promise chaining?
 The process of executing a sequence of asynchronous tasks one after another using promises is known as Promise chaining.
 
@@ -694,7 +718,8 @@ The initial promise resolves in 1 second,
 After that .then handler is called by logging the result(1) and then return a promise with the value of result * 2.
 After that the value passed to the next .then handler by logging the result(2) and return a promise with result * 3.
 Finally the value passed to the last .then handler by logging the result(6) and return a promise with result * 4.
-↥ back to top
+
+
 Q. What is promise.all()?
 Promise.all is a promise that takes an array of promises as an input (an iterable), and it gets resolved when all the promises get resolved or any one of them gets rejected.
 
@@ -705,7 +730,8 @@ Promise.all([Promise1, Promise2, Promise3])
         .catch(error => console.log(`Error in promises ${error}`));
 Note: Remember that the order of the promises(output the result) is maintained as per input order.
 
-↥ back to top
+
+
 Q. What is the purpose of race method in promise?
 Promise.race() method will return the promise instance which is firstly resolved or rejected. Let us take an example of race() method where promise2 is resolved first
 
@@ -719,7 +745,8 @@ var promise2 = new Promise(function(resolve, reject) {
 Promise.race([promise1, promise2]).then(function(value) {
   console.log(value); // "two" // Both promises will resolve, but promise2 is faster
 });
-↥ back to top
+
+
 Q. What is a strict mode in javascript?
 Strict Mode is a new feature in ECMAScript 5 that allows to place a program, or a function, in a strict operating context. This way it prevents certain actions from being taken and throws more exceptions. The literal expression 'use strict'; instructs the browser to use the javascript code in the Strict mode.
 
@@ -750,95 +777,6 @@ JavaScript is an interpreted language, not a compiled language. An interpreter i
 
 
 =====================04======================
-Q. What is typeof operator?
-In JavaScript, the typeof operator returns the data type of its operand in the form of a string. The operand can be any object, function, or variable.
-
-Example: - 01
-
-typeof undeclaredVariable; // "undefined"
-
-var a;
-typeof a; // "undefined"
-
-a = "Hello World";
-typeof a; // "string"
-
-a = 42;
-typeof a; // "number"
-
-a = 3.1415
-typeof a; // "number"
-
-a = true;
-typeof a; // "boolean"
-
-a = null;
-typeof a; // "object"
-
-a = undefined;
-typeof a; // "undefined"
-
-a = { b: "c" };
-typeof a; // "object"
-Example: - 02
-
-// Numbers
-typeof 37 === 'number';
-typeof 3.14 === 'number';
-typeof(42) === 'number';
-typeof Math.LN2 === 'number';
-typeof Infinity === 'number';
-typeof NaN === 'number';       
-typeof Number('1') === 'number';  // Number tries to parse things into numbers
-typeof Number('Hi') === 'number'; // including values that cannot be type coerced to a number
-
-typeof 42n === 'bigint';
-
-// Strings
-typeof '' === 'string';
-typeof 'Hello' === 'string';
-typeof `template literal` === 'string';
-typeof '1' === 'string';  // note that a number within a string is still typeof string
-typeof (typeof 1) === 'string';  // typeof always returns a string
-typeof String(1) === 'string';  // String converts anything into a string, safer than toString
-
-// Booleans
-typeof true === 'boolean';
-typeof false === 'boolean';
-typeof Boolean(1) === 'boolean'; // Boolean() will convert values based on if they're truthy or falsy
-typeof !!(1) === 'boolean'; // two calls of the ! (logical NOT) operator are equivalent to Boolean()
-
-// Symbols
-typeof Symbol() === 'symbol'
-typeof Symbol('foo') === 'symbol'
-typeof Symbol.iterator === 'symbol'
-
-// Undefined
-typeof undefined === 'undefined';
-typeof declaredButUndefinedVariable === 'undefined';
-typeof undeclaredVariable === 'undefined';
-
-// Objects
-typeof {a: 1} === 'object';
-
-// use Array.isArray or Object.prototype.toString.call
-// to differentiate regular objects from arrays
-typeof [1, 2, 4] === 'object';
-
-typeof new Date() === 'object';
-typeof /regex/ === 'object'; 
-
-// The following are confusing. 
-typeof new Boolean(true) === 'object';
-typeof new Number(1) === 'object';
-typeof new String('abc') === 'object';
-
-// Functions
-typeof function() {} === 'function';
-typeof class C {} === 'function';
-typeof Math.sin === 'function';
-
-
 Q. What is typeof operator?
 In JavaScript, the typeof operator returns the data type of its operand in the form of a string. The operand can be any object, function, or variable.
 
@@ -978,12 +916,14 @@ Q. What is the use of setTimeout?
 The setTimeout() method is used to call a function or evaluates an expression after a specified number of milliseconds. For example, let us log a message after 2 seconds using setTimeout method,
 
 setTimeout(function() { console.log("Good morning"); }, 2000);
-↥ back to top
+
+
 Q. What is the use of setInterval?
 The setInterval() method is used to call a function or evaluates an expression at specified intervals (in milliseconds). For example, let us log a message after 2 seconds using setInterval method,
 
 setInterval(function() { console.log("Good morning"); }, 2000);
-↥ back to top
+
+
 Q. How setTimeout() and setInterval() are different from each other?
 //Syntax for setTimeout
 
@@ -1012,11 +952,13 @@ Main Difference
 
 When you need to invoke a function/expression once after a specified duration use setTimeout() function. But, if you need to invoke a function/expression repeatedly at a specified interval of time, then you should use setInterval() function.
 
-↥ back to top
+
+
 Q. Why is JavaScript treated as Single threaded?
 JavaScript is a single-threaded language. Because the language specification does not allow the programmer to write code so that the interpreter can run parts of it in parallel in multiple threads or processes. Whereas languages like java, go, C++ can make multi-threaded and multi-process programs.
 
-↥ back to top
+
+
 Q. What is an event delegation?
 Event delegation is a technique for listening to events where you delegate a parent element as the listener for all of the events that happen inside it. For example, if you wanted to detect field changes in inside a specific form, you can use event delegation technique,
 
@@ -1029,21 +971,24 @@ form.addEventListener('input', function (event) {
 console.log(event.target);
 
 }, false);
-↥ back to top
+
+
 Q. What is the purpose JSON stringify?
 When sending data to a web server, the data has to be in a string format. You can achieve this by converting JSON object into a string using stringify() method.
 
 var userJSON = {'name': 'John', age: 31}
 var userString = JSON.stringify(user);
 console.log(userString); //"{"name":"John","age":31}"
-↥ back to top
+
+
 Q. How do you parse JSON string?
 When receiving the data from a web server, the data is always in a string format. But you can convert this string value to javascript object using parse() method.
 
 var userString = '{"name":"John","age":31}';
 var userJSON = JSON.parse(userString);
 console.log(userJSON);// {name: "John", age: 31}
-↥ back to top
+
+
 Q. What is the purpose of clearTimeout method?
 The clearTimeout() function is used in javascript to clear the timeout which has been set by setTimeout() function before that. i.e, The return value of setTimeout() function is stored in a variable and it’s passed into the clearTimeout() function to clear the timer. For example, the below setTimeout method is used to display the message after 3 seconds. This timeout can be cleared by clearTimeout() method.
 
@@ -1057,7 +1002,8 @@ function start() {
 function stop() {
     clearTimeout(msg);
 }
-↥ back to top
+
+
 Q. What is the purpose of clearInterval method?
 The clearInterval() function is used in javascript to clear the interval which has been set by setInterval() function. i.e, The return value returned by setInterval() function is stored in a variable and it’s passed into the clearInterval() function to clear the interval. For example, the below setInterval method is used to display the message for every 3 seconds. This interval can be cleared by clearInterval() method.
 
@@ -1104,7 +1050,8 @@ function functionName(parameter1, parameter2, parameter3) {
   console.log(parameter1); // 1
 }
 functionName(1);
-↥ back to top
+
+
 Q. What is an error object?
 An error object is a built in error object that provides error information when an error occurs. It has two properties: name and message. For example, the below function logs error details,
 
@@ -1114,7 +1061,8 @@ try {
 catch(err) {
   console.log(err.name + "<br>" + err.message);
 }
-↥ back to top
+
+
 Q. When you get a syntax error?
 A SyntaxError is thrown if you try to evaluate code with a syntax error. For example, the below missing quote for the function parameter throws a syntax error
 
@@ -1124,7 +1072,8 @@ try {
 catch(err) {
   console.log(err.name);
 }
-↥ back to top
+
+
 Q. What are the different error names from error object?
 There are 6 different types of error names returned from error object
 
@@ -1135,7 +1084,8 @@ ReferenceError	An error due to an illegal reference
 SyntaxError	An error due to a syntax error
 TypeError	An error due to a type error
 URIError	An error due to encodeURI()
-↥ back to top
+
+
 Q. What are the various statements in error handling?
 Below are the list of statements used in an error handling,
 
@@ -1164,7 +1114,8 @@ console.log(person.name); // Uncaught TypeError: Cannot read property 'name' of 
 var person = new Person('John');
 console.log(person); // Person { name: "John" }
 console.log(person.name); // "john"
-↥ back to top
+
+
 Q. What is the difference between .call and .apply?
 Both .call and .apply are used to invoke functions and the first parameter will be used as the value of this within the function. However, .call takes in comma-separated arguments as the next arguments while .apply takes in an array of arguments as the next argument. An easy way to remember this is C for call and comma-separated and A for apply and an array of arguments.
 
@@ -1174,7 +1125,8 @@ function add(a, b) {
 
 console.log(add.call(null, 1, 2)); // 3
 console.log(add.apply(null, [1, 2])); // 3
-↥ back to top
+
+
 Q. Explain Function.prototype.bind?
 MDN:
 
@@ -1222,7 +1174,8 @@ foo(); // Uncaught TypeError: foo is not a function
 var foo = function() {
   console.log('FOOOOO');
 };
-↥ back to top
+
+
 Q. What are the differences between variables created using let, var or const?
 Variables declared using the var keyword are scoped to the function in which they are created, or if created outside of any function, to the global object. let and const are block scoped, meaning they are only accessible within the nearest set of curly braces (function, if-else block, or for-loop).
 
@@ -1278,7 +1231,8 @@ foo = 'bar';
 // This causes an exception.
 const baz = 'baz';
 baz = 'qux';
-↥ back to top
+
+
 Q. What is the definition of a higher-order function?
 A higher-order function is any function that takes one or more functions as arguments, which it uses to operate on some data, and/or returns a function as a result. Higher-order functions are meant to abstract some operation that is performed repeatedly. The classic example of this is map, which takes an array and a function as arguments. map then uses this function to transform each item in the array, returning a new array with the transformed data. Other popular examples in JavaScript are forEach, filter, and reduce. A higher-order function doesn't just need to be manipulating arrays as there are many use cases for returning a function from another function. Function.prototype.bind is one such example in JavaScript.
 
@@ -1303,7 +1257,8 @@ const transformNamesToUppercase = function(names) {
   return names.map(name => name.toUpperCase());
 };
 transformNamesToUppercase(names); // ['IRISH', 'DAISY', 'ANNA']
-↥ back to top
+
+
 Q. Can you give an example of a curry function and why this syntax offers an advantage?
 Currying is a pattern where a function with more than one parameter is broken into multiple functions that, when called in series, will accumulate all of the required parameters one at a time. This technique can be useful for making code written in a functional style easier to read and compose. It is important to note that for a function to be curried, it needs to start out as one function, then broken out into a sequence of functions that each accepts one parameter.
 
@@ -1483,7 +1438,8 @@ var btn = document.getElementById('myBtn');
 btn.addEventListener('click', clickHandler.handleClick.bind(clickHandler));
 bind method is available to all the function similar to call and apply method which take argument value of this.
 
-↥ back to top
+
+
 Q. Explain how this works in JavaScript?
 The following rules are applied when we use this keyword in javascript
 
@@ -1493,7 +1449,8 @@ If a function is called as a method, such as obj.method() — this is the ob
 If a function is invoked as a free function invocation, meaning it was invoked without any of the conditions present above, this is the global object. In a browser, it is the window object. If in strict mode ('use strict'), this will be undefined instead of the global object.
 If multiple of the above rules apply, the rule that is higher wins and will set the this value.
 If the function is an ES2015 arrow function, it ignores all the rules above and receives the this value of its surrounding scope at the time it is created.
-↥ back to top
+
+
 Q. Explain how prototypal inheritance works?
 All JavaScript objects have a prototype property, that is a reference to another object. When a property is accessed on an object and if the property is not found on that object, the JavaScript engine looks at the object's prototype, and the prototype's prototype and so on, until it finds the property defined on one of the prototypes or until it reaches the end of the prototype chain.
 
@@ -1559,7 +1516,8 @@ c.greet();
 
 c.constructor.name;
 // Outputs: "Child"
-↥ back to top
+
+
 Q. Can you describe the main difference between a .forEach loop and a .map() loop and why you would pick one versus the other?
 To understand the differences between the two, Let us look at what each function does.
 
@@ -1596,7 +1554,8 @@ let arrayIntegers2 = arrayIntegers.slice(2,3); // returns [3]
 let arrayIntegers3 = arrayIntegers.slice(4); //returns [5]
 Note: Slice method wonot mutate the original array but it returns the subset as new array.
 
-↥ back to top
+
+
 Q. What is the purpose of array splice method?
 The splice() method is used either adds/removes items to/from an array, and then returns the removed item. The first argument specifies the array position for insertion or deletion whereas the option second argument indicates the number of elements to be deleted. Each additional argument is added to the array. Some of the examples of this method are,
 
@@ -1609,7 +1568,8 @@ let arrayIntegers2 = arrayIntegersOriginal2.splice(3); // returns [4, 5]; origin
 let arrayIntegers3 = arrayIntegersOriginal3.splice(3, 1, "a", "b", "c"); //returns [4]; original array: [1, 2, 3, "a", "b", "c", 5]
 Note: Splice method modifies the original array and returns the deleted array.
 
-↥ back to top
+
+
 Q. What is the difference between slice and splice?
 Some of the major difference in a tabular form
 
@@ -1784,7 +1744,8 @@ console.log(array1.includes(2)); // Output: true
 
 var pets = ['cat', 'dog', 'bat'];
 console.log(pets.includes('at')); // Output: false
-↥ back to top
+
+
 Q. When to use function declarations and expressions in JavaScript?
 Function Declarations A declared function is “saved for later use”, and will be executed later, when it is invoked (called).
 
@@ -1813,7 +1774,8 @@ There are several different ways that function expressions become more useful th
 As closures
 As arguments to other functions
 As Immediately Invoked Function Expressions (IIFE)
-↥ back to top
+
+
 Q. How to avoid callback hell in javascript?
 Callback hell is a phenomenon that afflicts a JavaScript developer when he tries to execute multiple asynchronous operations one after the other. Some people call it to be the pyramid of doom.
 
